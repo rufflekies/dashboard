@@ -1,0 +1,30 @@
+services:
+  frontend:
+    build: ./frontend
+    image: frontend:latest
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:3001/api
+    networks:
+      - nginx_default
+      - custom_network
+
+  backend:
+    build: ./backend
+    image: backend:latest
+    container_name: backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - nginx_default
+      - custom_network
+
+networks:
+  nginx_default:
+    external: true
+  custom_network:
+    driver: bridge
